@@ -70,7 +70,16 @@
 </div>
 <script type="module">
     const params = new URLSearchParams(window.location.search);
-    const rendererUrl = params.get("renderer") || "./dist-renderer/bluemap-renderer.js";
+
+    function sameOriginUrl(raw, fallback) {
+        const resolved = new URL(raw || fallback, window.location.href);
+        if (resolved.origin !== window.location.origin) {
+            throw new Error(`Cross-origin URL rejected: ${raw}`);
+        }
+        return resolved.href;
+    }
+
+    const rendererUrl = sameOriginUrl(params.get("renderer"), "../build/renderer/bluemap-renderer.js");
     const statusEl = document.getElementById("status");
     const coordsEl = document.getElementById("coords");
     const tilesEl = document.getElementById("tiles");
@@ -98,7 +107,7 @@
     async function start() {
         const {mountHeadlessMap} = await import(rendererUrl);
 
-        const settingsUrl = params.get("settings") || "./settings.json";
+        const settingsUrl = sameOriginUrl(params.get("settings"), "./settings.json");
         const rootSettings = params.has("map") && params.has("mapDataRoot")
             ? null
             : await readRootSettings(settingsUrl);

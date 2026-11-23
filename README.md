@@ -12,9 +12,9 @@ npm ci
 npm run build:renderer
 ```
 
-The build writes `common/webapp/dist-renderer/bluemap-renderer.js` and its sourcemap. Gradle exposes the same build as `./gradlew :common:buildRenderer` and packages it in `./gradlew :common:zipRenderer`.
+The build writes `common/build/renderer/bluemap-renderer.js` and its sourcemap. Gradle exposes the same build as `./gradlew :common:buildRenderer` and packages it in `./gradlew :common:zipRenderer`.
 
-To embed the renderer over rendered BlueMap tiles, serve `common/webapp` alongside a `maps/` directory and open `headless-test.html` (optional query parameters: `map`, `root`, `mapDataRoot`, `view`, `x`, `z`, `distance`, `clientDecompression`).
+To embed the renderer over rendered BlueMap tiles, serve `common` alongside a `maps/` directory and open `webapp/headless-test.html` (optional query parameters: `map`, `root`, `mapDataRoot`, `renderer`, `settings`, `view`, `x`, `z`, `distance`, `clientDecompression`).
 
 ---
 

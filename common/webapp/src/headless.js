@@ -73,6 +73,7 @@ export * from "./js/util/Utils";
 export * from "./js/MapViewer";
 export * from "./js/Utils";
 
+// Mirrors BlueMap.js without modifying upstream src/js/.
 if (!Object3D.prototype.onClick) {
     Object3D.prototype.onClick = function (event) {
         if (this.parent) {
@@ -187,21 +188,11 @@ export async function mountHeadlessMap(container, options) {
 
     setView(options.view ?? "perspective");
 
-    const dispose = () => {
-        if (resizeObserver) resizeObserver.disconnect();
-        window.removeEventListener("resize", viewer.handleContainerResize);
-        viewer.controlsManager.controls = null;
-        if (viewer.map) viewer.map.unload();
-        map.dispose();
-        viewer.renderer.dispose();
-    };
-
     return {
         viewer,
         map,
         controls: mapControls,
         freeFlightControls,
-        setView,
-        dispose
+        setView
     };
 }

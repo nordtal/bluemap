@@ -9,7 +9,7 @@ export default defineConfig({
         }
     },
     build: {
-        outDir: 'dist-renderer',
+        outDir: '../build/renderer',
         emptyOutDir: true,
         copyPublicDir: false,
         sourcemap: true,

@@ -39,16 +39,15 @@ tasks.register("buildRenderer", type = NpmTask::class) {
     inputs.file("webapp/package.json")
     inputs.file("webapp/package-lock.json")
     inputs.file("webapp/vite.renderer.config.js")
-    outputs.dir("webapp/dist-renderer/")
+    outputs.dir("build/renderer/")
 }
 
 tasks.register("zipRenderer", type = Zip::class) {
     dependsOn ("buildRenderer")
-    from (fileTree("webapp/dist-renderer/"))
+    from (fileTree("build/renderer/"))
     archiveFileName = "bluemap-${project.version}-renderer.zip"
     destinationDirectory = releaseDirectory
 
-    inputs.dir("webapp/dist-renderer/")
     outputs.file(releaseDirectory.resolve("bluemap-${project.version}-renderer.zip"))
 }
 
@@ -91,8 +90,6 @@ tasks.clean {
     doFirst {
         if (!file("webapp/dist/").deleteRecursively())
             throw IOException("Failed to delete build directory!")
-        if (!file("webapp/dist-renderer/").deleteRecursively())
-            throw IOException("Failed to delete renderer build directory!")
     }
 }
 
