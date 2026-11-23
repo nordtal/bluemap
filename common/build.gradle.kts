@@ -31,6 +31,27 @@ tasks.register("buildWebapp", type = NpmTask::class) {
     outputs.dir("webapp/dist/")
 }
 
+tasks.register("buildRenderer", type = NpmTask::class) {
+    dependsOn ("npmInstall")
+    args = listOf("run", "build:renderer")
+
+    inputs.dir("webapp/src/")
+    inputs.file("webapp/package.json")
+    inputs.file("webapp/package-lock.json")
+    inputs.file("webapp/vite.renderer.config.js")
+    outputs.dir("webapp/dist-renderer/")
+}
+
+tasks.register("zipRenderer", type = Zip::class) {
+    dependsOn ("buildRenderer")
+    from (fileTree("webapp/dist-renderer/"))
+    archiveFileName = "bluemap-${project.version}-renderer.zip"
+    destinationDirectory = releaseDirectory
+
+    inputs.dir("webapp/dist-renderer/")
+    outputs.file(releaseDirectory.resolve("bluemap-${project.version}-renderer.zip"))
+}
+
 tasks.register("zipWebapp", type = Zip::class) {
     dependsOn ("buildWebapp")
     from (fileTree("webapp/dist/"))
@@ -60,7 +81,7 @@ tasks.getByName("sourcesJar") {
 
 tasks.register<CopyFileTask>("release") {
     group = "publishing"
-    dependsOn("zipWebapp")
+    dependsOn("zipWebapp", "zipRenderer")
 
     inputFile = tasks.getByName("zipWebapp").outputs.files.singleFile
     outputFile = releaseDirectory.resolve("bluemap-${project.version}-webapp.zip")
@@ -70,6 +91,8 @@ tasks.clean {
     doFirst {
         if (!file("webapp/dist/").deleteRecursively())
             throw IOException("Failed to delete build directory!")
+        if (!file("webapp/dist-renderer/").deleteRecursively())
+            throw IOException("Failed to delete renderer build directory!")
     }
 }
 

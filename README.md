@@ -1,3 +1,23 @@
+# Nordtal BlueMap
+
+This repository forks BlueMap on upstream release tags. It renders world tiles and exports BlueMap's WebGL map renderer as a headless ES module without BlueMap's Vue web app.
+
+## Headless renderer
+
+Build the headless renderer bundle in `common/webapp`:
+
+```sh
+cd common/webapp
+npm ci
+npm run build:renderer
+```
+
+The build writes `common/webapp/dist-renderer/bluemap-renderer.js` and its sourcemap. Gradle exposes the same build as `./gradlew :common:buildRenderer` and packages it in `./gradlew :common:zipRenderer`.
+
+To embed the renderer over rendered BlueMap tiles, serve `common/webapp` alongside a `maps/` directory and open `headless-test.html` (optional query parameters: `map`, `root`, `mapDataRoot`, `view`, `x`, `z`, `distance`, `clientDecompression`).
+
+---
+
 [![title-banner](https://bluecolored.de/paste/BluemapBanner.png)](https://bluemap.bluecolored.de/)
 
 <div align="center">
